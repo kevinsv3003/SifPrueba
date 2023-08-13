@@ -14,15 +14,9 @@ namespace Aplicacion.Servicios.ControlUsuario
     public class ControlUsuarioAplicacion : IControlUsuarioAplicacion
     {
         private IUsuarioNegocio _usuarioNegocio;
-        private SignInManager<UsuarioApp> _signManager;
-        private UserManager<UsuarioApp> _userManager;
-        private RoleManager<RolApp> _roleManager;
-        public ControlUsuarioAplicacion(SignInManager<UsuarioApp> _signManager, UserManager<UsuarioApp> _userManager, RoleManager<RolApp> _roleManager,IUsuarioNegocio _usuarioNegocio)
+        public ControlUsuarioAplicacion(IUsuarioNegocio _usuarioNegocio)
         {
             this._usuarioNegocio = _usuarioNegocio;
-            this._signManager = _signManager;
-            this._userManager = _userManager;
-            this._roleManager = _roleManager;
         }
         public async Task<bool> ActualizarRol(RolDto rolDto)
         {
