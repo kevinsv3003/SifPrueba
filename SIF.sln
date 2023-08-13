@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentacion", "1. Prese
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Dominio", "3. Dominio", "{00F6DA45-8561-442D-95E0-5638083A1BA4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Infraestructura", "3. Infraestructura", "{69817D21-E477-4F7A-ABEC-5E057FAC4C72}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Infraestructura", "4. Infraestructura", "{69817D21-E477-4F7A-ABEC-5E057FAC4C72}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domino.Entidades", "Entidades\Domino.Entidades.csproj", "{3341CA5F-EED2-4EA8-A8A6-9D7AF7C43B5F}"
 EndProject
@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Aplicacion", "2. Aplicac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aplicacion.Servicios", "Aplicacion.Servicios\Aplicacion.Servicios.csproj", "{4F35177C-9D39-4E3C-BE80-6070DF153849}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aplicacion.Contrato", "Aplicacion.Contrato\Aplicacion.Contrato.csproj", "{444D3C62-78C1-401F-9447-C2B73089EA88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aplicacion.Contrato", "Aplicacion.Contrato\Aplicacion.Contrato.csproj", "{444D3C62-78C1-401F-9447-C2B73089EA88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

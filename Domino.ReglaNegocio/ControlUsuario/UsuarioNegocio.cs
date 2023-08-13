@@ -25,18 +25,20 @@ namespace Dominio.ReglaNegocio
             this._roleManager = _roleManager;
         }
 
-        public List<UsuarioDto> ObtenerUsuarios()
+        public List<UsuarioApp> ObtenerUsuarios()
         {
-            var resultado = new List<UsuarioDto>();
+            var resultado = new List<UsuarioApp>();
             try
             {
                 var users = _userManager.Users.ToList();
-                foreach (var item in users)
-                {
-                    var user = Mapper.Map<UsuarioApp, UsuarioDto>(item);
-                    user.Rol = obtenerRolUsuario(item).Result;
-                    resultado.Add(user);
-                }
+                //foreach (var item in users)
+                //{
+                //    var user = Mapper.Map<UsuarioApp, UsuarioDto>(item);
+                //    user.Rol = obtenerRolUsuario(item).Result;
+                //    resultado.Add(user);
+                //}
+                resultado = users;
+                    
             }
             catch (Exception ex)
             {
@@ -45,22 +47,23 @@ namespace Dominio.ReglaNegocio
             return resultado;
         }
 
-        public List<RolDto> ObtenerRoles()
+        public List<RolApp> ObtenerRoles()
         {
-            var resultado = new List<RolDto>();
+            var resultado = new List<RolApp>();
             try
             {
                 var roles = _roleManager.Roles.ToList();
-                foreach (var item in roles)
-                {
-                    var rol = new RolDto()
-                    {
-                        Nombre = item.Name,
-                        Descripcion = item.Descripcion,
-                        IdRol = item.Id.ToString()
-                    };
-                    resultado.Add(rol);
-                }
+                //foreach (var item in roles)
+                //{
+                //    var rol = new RolDto()
+                //    {
+                //        Nombre = item.Name,
+                //        Descripcion = item.Descripcion,
+                //        IdRol = item.Id.ToString()
+                //    };
+                //    resultado.Add(rol);
+                //}
+                resultado = roles;
             }
             catch (Exception ex)
             {
@@ -69,20 +72,20 @@ namespace Dominio.ReglaNegocio
             return resultado;
         }
 
-        public async Task<RolDto> BuscarRolPorIdRol(string IdRol)
+        public async Task<RolApp> BuscarRolPorIdRol(string IdRol)
         {
-            var resultado = new RolDto();
+            var resultado = new RolApp();
             try
             {
                 var roles = await _roleManager.FindByIdAsync(IdRol);
 
-                resultado = new RolDto()
-                {
-                    Nombre = roles.Name,
-                    Descripcion = roles.Descripcion,
-                    IdRol = roles.Id.ToString()
-                };
-
+                //resultado = new RolDto()
+                //{
+                //    Nombre = roles.Name,
+                //    Descripcion = roles.Descripcion,
+                //    IdRol = roles.Id.ToString()
+                //};
+                resultado = roles;
             }
             catch (Exception ex)
             {
@@ -91,23 +94,23 @@ namespace Dominio.ReglaNegocio
             return resultado;
         }
 
-        public async Task<bool> ActualizarUsuario(UsuarioDto usuariodto)
+        public async Task<bool> ActualizarUsuario(UsuarioApp usuariodto, string rol)
         {
             bool respuesta = false;
             try
             {
-                var usuario = await _userManager.FindByIdAsync(usuariodto.Id);
+                var usuario = usuariodto;// await _userManager.FindByIdAsync(usuariodto.Id);
 
-                usuario.Nombres = usuariodto.Nombres;
-                usuario.Apellidos = usuariodto.Apellidos;
-                usuario.UserName = usuariodto.UserName;
-                usuario.Sexo = usuariodto.Sexo;
-                usuario.PhoneNumber = usuariodto.PhoneNumber;
-                usuario.Email = usuariodto.Email;
+                //usuario.Nombres = usuariodto.Nombres;
+                //usuario.Apellidos = usuariodto.Apellidos;
+                //usuario.UserName = usuariodto.UserName;
+                //usuario.Sexo = usuariodto.Sexo;
+                //usuario.PhoneNumber = usuariodto.PhoneNumber;
+                //usuario.Email = usuariodto.Email;
 
                 var rolUsuario = await obtenerRolUsuario(usuario);
                 var borrarRol = (rolUsuario != string.Empty) ? await _userManager.RemoveFromRoleAsync(usuario, rolUsuario) : new IdentityResult();
-                var AsignarRol = (borrarRol.Succeeded || rolUsuario == string.Empty) ? await _userManager.AddToRoleAsync(usuario, usuariodto.Rol) : new IdentityResult();
+                var AsignarRol = (borrarRol.Succeeded || rolUsuario == string.Empty) ? await _userManager.AddToRoleAsync(usuario, rol) : new IdentityResult();
                 var Actualizado = await _userManager.UpdateAsync(usuario);
 
                 respuesta = Actualizado.Succeeded && AsignarRol.Succeeded;
@@ -119,14 +122,14 @@ namespace Dominio.ReglaNegocio
             return respuesta;
         }
 
-        public async Task<bool> ActualizarRol(RolDto rolDto)
+        public async Task<bool> ActualizarRol(RolApp rolDto)
         {
             bool respuesta = false;
             try
             {
-                var Rol = await _roleManager.FindByIdAsync(rolDto.IdRol);
-                Rol.Name = rolDto.Nombre;
-                Rol.Descripcion = rolDto.Descripcion;
+                var Rol = rolDto;// await _roleManager.FindByIdAsync(rolDto.IdRol);
+                //Rol.Name = rolDto.Nombre;
+                //Rol.Descripcion = rolDto.Descripcion;
                 var Actualizado = await _roleManager.UpdateAsync(Rol);
                 respuesta = Actualizado.Succeeded;
             }
@@ -137,12 +140,12 @@ namespace Dominio.ReglaNegocio
             return respuesta;
         }
 
-        public async Task<bool> GuardarRol(RolDto roldto)
+        public async Task<bool> GuardarRol(RolApp roldto)
         {
             bool respuesta = false;
             try
             {
-                var rol = new RolApp() { Name = roldto.Nombre, Descripcion = roldto.Descripcion };
+                var rol = roldto;// new RolApp() { Name = roldto.Nombre, Descripcion = roldto.Descripcion };
                 var guardoRol = await _roleManager.CreateAsync(rol);
                 respuesta = guardoRol.Succeeded;
             }
@@ -153,17 +156,17 @@ namespace Dominio.ReglaNegocio
             return respuesta;
         }
 
-        public async Task<bool> GuardarUsuario(UsuarioDto usuarioDto)
+        public async Task<bool> GuardarUsuario(UsuarioApp usuarioDto, string pass, string rol)
         {
             bool respuesta = false;
             try
             {
-                var usuario = Mapper.Map<UsuarioDto, UsuarioApp>(usuarioDto);
+                var usuario = usuarioDto;//Mapper.Map<UsuarioDto, UsuarioApp>(usuarioDto);
                 
-                var guardoUsuario = await _userManager.CreateAsync(usuario, usuarioDto.contra);
+                var guardoUsuario = await _userManager.CreateAsync(usuario,pass);
                 if (guardoUsuario.Succeeded)
                 {
-                    var rolAsignado = await _userManager.AddToRoleAsync(usuario, usuarioDto.Rol);
+                    var rolAsignado = await _userManager.AddToRoleAsync(usuario, rol);
                     respuesta = guardoUsuario.Succeeded && rolAsignado.Succeeded;
                 }
                 else if (guardoUsuario.Errors.FirstOrDefault().Code.Equals("PasswordTooShort"))

@@ -1,5 +1,7 @@
 ﻿
 using Aplicacion.Contrato;
+using Aplicacion.Contrato.ControlUsuarioInterface;
+using Aplicacion.Servicios.ControlUsuario;
 using Aplicacion.Servicios.MenuServicios;
 using Dominio.Contratos.Repositorios;
 using Dominio.Contratos.Servicio;
@@ -30,6 +32,7 @@ namespace Infraestructura.IoC
             services.AddScoped<IMenuRolNegocio, MenuRolNegocio>();
 
             //REGISTRAMOS LOS MODELOS DE APLICACION           
+            services.AddScoped<IControlUsuarioAplicacion, ControlUsuarioAplicacion>();
             services.AddScoped<IMenuRolAplicacion, MenuRolAplicacion>();
             services.AddScoped<IMenuAplicacion, MenuAplicacion>();
 

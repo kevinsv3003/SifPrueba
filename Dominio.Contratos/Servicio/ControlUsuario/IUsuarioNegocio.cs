@@ -9,17 +9,17 @@ namespace Dominio.Contratos.Servicio
 {
     public interface IUsuarioNegocio
     {
-        Task<bool> ActualizarUsuario(UsuarioDto usuariodto);
+        Task<bool> ActualizarUsuario(UsuarioApp usuariodto,string rol);
         Task<string> obtenerRolUsuario(UsuarioApp usuario);
         Task<bool> ResetPass(UsuarioApp user, string pass);
-        Task<bool> GuardarUsuario(UsuarioDto usuarioDto);
+        Task<bool> GuardarUsuario(UsuarioApp usuarioDto,string pass, string rol);
         Task<bool> EliminarUsuario(string Id);
-        List<UsuarioDto> ObtenerUsuarios();
-        List<RolDto> ObtenerRoles();
-        Task<RolDto> BuscarRolPorIdRol(string IdRol);
+        List<UsuarioApp> ObtenerUsuarios();
+        List<RolApp> ObtenerRoles();
+        Task<RolApp> BuscarRolPorIdRol(string IdRol);
         Task<bool> EliminarRol(string Id);
-        Task<bool> ActualizarRol(RolDto rolDto);
-        Task<bool> GuardarRol(RolDto roldto);
+        Task<bool> ActualizarRol(RolApp rolDto);
+        Task<bool> GuardarRol(RolApp roldto);
    
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Aplicacion.Contrato;
+using Aplicacion.Contrato.ControlUsuarioInterface;
 using Aplicacion.EntidadesDto;
 using AutoMapper;
 using Dominio.Contratos.Servicio;
@@ -23,17 +24,19 @@ namespace SIF.Controllers
         private UserManager<UsuarioApp> _userManager;
         private RoleManager<RolApp> _roleManager;
         private IUsuarioNegocio _usuarioNegocio;
+        private IControlUsuarioAplicacion _usuarioAplicacion;
         private IMenuAplicacion _menuAplicacion;
         private IMenuRolAplicacion _menuRolAplicacion;
         private IUtilitario _utilitario;
 
-        public SeguridadController(SignInManager<UsuarioApp> _signManager, UserManager<UsuarioApp> _userManager, IMenuRolAplicacion _menuRolAplicacion,
+        public SeguridadController(SignInManager<UsuarioApp> _signManager, UserManager<UsuarioApp> _userManager, IMenuRolAplicacion _menuRolAplicacion, IControlUsuarioAplicacion _usuarioAplicacion,
             RoleManager<RolApp> _roleManager, IUsuarioNegocio _usuarioNegocio, IMenuAplicacion _menuAplicacion, IUtilitario _utilitario)
         {
             this._signManager = _signManager;
             this._userManager = _userManager;
             this._roleManager = _roleManager;
             this._usuarioNegocio = _usuarioNegocio;
+            this._usuarioAplicacion = _usuarioAplicacion;
             this._menuAplicacion = _menuAplicacion;
             this._menuRolAplicacion = _menuRolAplicacion;
             this._utilitario = _utilitario;
@@ -49,7 +52,7 @@ namespace SIF.Controllers
         {
             try
             {
-                var usuarios = _usuarioNegocio.ObtenerUsuarios();
+                var usuarios = _usuarioAplicacion.ObtenerUsuarios();// _usuarioNegocio.ObtenerUsuarios();
                 return PartialView(usuarios);
             }
             catch (Exception ex)
@@ -62,7 +65,7 @@ namespace SIF.Controllers
         {
             try
             {
-                var usuarios = _usuarioNegocio.ObtenerRoles();
+                var usuarios = _usuarioAplicacion.ObtenerRoles(); //_usuarioNegocio.ObtenerRoles();
                 return PartialView(usuarios);
             }
             catch (Exception ex)
@@ -99,7 +102,7 @@ namespace SIF.Controllers
             try
             {
                 ViewBag.Origen = Origen;
-                var rolDto = (Origen != (int)ORIGEN_FORMULARIO.NUEVO)  ? await _usuarioNegocio.BuscarRolPorIdRol(IdRol) : new RolDto();
+                var rolDto = (Origen != (int)ORIGEN_FORMULARIO.NUEVO)  ? await _usuarioAplicacion.BuscarRolPorIdRol(IdRol) : new RolDto();
 
                 return PartialView(rolDto);
             }
@@ -143,7 +146,7 @@ namespace SIF.Controllers
                 {
                     if (usuario.OrigenForm != (int)ORIGEN_FORMULARIO.NUEVO)
                     {
-                        var actualizado = await _usuarioNegocio.ActualizarUsuario(usuario);
+                        var actualizado = await _usuarioAplicacion.ActualizarUsuario(usuario);// _usuarioNegocio.ActualizarUsuario(usuario);
                         if (actualizado)
                         {
                             Response.StatusCode = (int)HttpStatusCode.OK;
@@ -165,7 +168,7 @@ namespace SIF.Controllers
                         else
                         {
                             usuario.contra = _utilitario.GenerarCodigo();
-                            var guardado = await _usuarioNegocio.GuardarUsuario(usuario);
+                            var guardado = await _usuarioAplicacion.GuardarUsuario(usuario);// _usuarioNegocio.GuardarUsuario(usuario);
                             if (guardado)
                             {
                                 Response.StatusCode = (int)HttpStatusCode.OK;
@@ -203,7 +206,7 @@ namespace SIF.Controllers
                 {
                     if (rol.IdRol != null)
                     {
-                        var actualizado = await _usuarioNegocio.ActualizarRol(rol);
+                        var actualizado = await _usuarioAplicacion.ActualizarRol(rol);// _usuarioNegocio.ActualizarRol(rol);
                         if (actualizado)
                         {
                             Response.StatusCode = (int)HttpStatusCode.OK;
@@ -218,7 +221,7 @@ namespace SIF.Controllers
                     else
                     {
 
-                        var guardado = await _usuarioNegocio.GuardarRol(rol);
+                        var guardado = await _usuarioAplicacion.GuardarRol(rol);// _usuarioNegocio.GuardarRol(rol);
                         if (guardado)
                         {
                             Response.StatusCode = (int)HttpStatusCode.OK;
@@ -252,7 +255,7 @@ namespace SIF.Controllers
             var mensaje = string.Empty;
             try
             {
-                var retorno = await _usuarioNegocio.EliminarUsuario(Id);
+                var retorno = await _usuarioAplicacion.EliminarUsuario(Id);// _usuarioNegocio.EliminarUsuario(Id);
                 if (retorno)
                 {
                     Response.StatusCode = (int)HttpStatusCode.OK;
@@ -279,7 +282,7 @@ namespace SIF.Controllers
             var mensaje = string.Empty;
             try
             {
-                var retorno = await _usuarioNegocio.EliminarRol(Id);
+                var retorno = await _usuarioAplicacion.EliminarRol(Id);// _usuarioNegocio.EliminarRol(Id);
                 if (retorno)
                 {
                     Response.StatusCode = (int)HttpStatusCode.OK;
@@ -344,7 +347,7 @@ namespace SIF.Controllers
                 {
                     var contraseña = _utilitario.GenerarCodigo();// General.GenerarCodigo();
 
-                    var ResetContraseña = await _usuarioNegocio.ResetPass(user, contraseña);
+                    var ResetContraseña = await _usuarioAplicacion.ResetPass(user, contraseña);// _usuarioNegocio.ResetPass(user, contraseña);
                     if (ResetContraseña)
                     {
                         var valoresCuerpo = new ValoresCorreoContra()
@@ -391,7 +394,7 @@ namespace SIF.Controllers
             var usuario = (Origen == (int)ORIGEN_FORMULARIO.PROPIO) && (User.Identity.IsAuthenticated) ? await _userManager.GetUserAsync(User) :
                           (Origen == (int)ORIGEN_FORMULARIO.NUEVO) ? null : await _userManager.FindByIdAsync(IdUser);
 
-            var rolUser = (usuario != null) ? await _usuarioNegocio.obtenerRolUsuario(usuario) : null;
+            var rolUser = (usuario != null) ? await _usuarioAplicacion.obtenerRolUsuario(usuario) : null;
 
             var rolList = _roleManager.Roles.ToList();
             List<SelectListItem> lst = new List<SelectListItem>();
