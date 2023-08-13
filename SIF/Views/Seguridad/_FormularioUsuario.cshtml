@@ -1,0 +1,203 @@
+﻿@model Aplicacion.EntidadesDto.UsuarioDto
+
+@{
+    var TituloFormulario = (ViewBag.Origen == 2) ?  "Nuevo Usuario" : "Editar Información";
+    var TituloBtn = (ViewBag.Origen == 2) ?  "Guardar Usuario" : "Actualizar Usuario";
+
+}
+
+<link href="~/assets/Select_Bootstrap/bootstrap-select.min.css" rel="stylesheet" />
+<script src="~/assets/Select_Bootstrap/bootstrap-select.min.js"></script>
+<script src="~/assets/Select_Bootstrap/defaults-es_ES.min.js"></script>
+
+<script src="~/assets/inputmask/dist/min/inputmask/jquery.inputmask.min.js"></script>
+<script src="~/assets/inputmask/dist/inputmask/bindings/inputmask.binding.js"></script>
+
+<div class="modal fade" id="modal-usuarioFormulario" data-backdrop="static" style="display:none">
+    <div class="modal-dialog animated fadeIn">
+
+        <div class="widget-box ui-sortable-handle">
+
+            <div class="widget-header widget-header-small text-center">
+
+                <h5 class="widget-title smaller bolder text-dark">
+                    <i class="ace-icon fa fa-edit"></i>
+                    @TituloFormulario
+                </h5>
+
+                <div class="widget-toolbar">
+                    <a href="#" data-action="close" data-dismiss="modal" aria-label="Close" title="Cerrar Modal">
+                        <i class="ace-icon fa fa-times bigger-125"></i>
+                    </a>
+
+                </div>
+            </div>
+            <form id="formControlUsuario" asp-controller="Seguridad" asp-action="GuardarUsuario"
+                  data-ajax="true"
+                  data-ajax-method="POST"
+                  data-ajax-begin="onBegin"
+                  data-ajax-complete="onComplete"
+                  data-ajax-success="onSuccessEdit"
+                  data-ajax-failure="onFailEdit">
+                <div class="widget-body">
+                    <div class="widget-main">
+
+                        <div id="content-usuarios" class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Nombres:</label>
+                                            <div id="contentNombre" class="form-group">
+                                                <label id="lblSuccessNombre" style="display:none; font-size:small" class="control-label" for="NombreProducto"><i class="fa fa-check"></i> Formato Correcto!</label>
+                                                <label id="lblErrorNombre" style="display:none;  font-size:small" class="control-label" for="Nombres"><i class="fa fa-times-circle-o"></i> Formato Incorrecto!</label>
+                                                <input type="hidden" asp-for="Id" class="form-control" readonly="readonly">
+                                                <input type="text" asp-for="Nombres" class="form-control" maxlength="200" placeholder="Escriba el nombre del Usuario">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Apellidos:</label>
+                                            <div id="contentApellido" class="form-group">
+                                                <label id="lblSuccessApellido" style="display:none; font-size:small" class="control-label" for="NombreProducto"><i class="fa fa-check"></i> Formato Correcto!</label>
+                                                <label id="lblErrorApellido" style="display:none;  font-size:small" class="control-label" for="Nombres"><i class="fa fa-times-circle-o"></i> Formato Incorrecto!</label>
+                                                <input type="text" asp-for="Apellidos" class="form-control" maxlength="200" placeholder="Escriba el nombre del Usuario">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Nombre de Usuario:</label>
+                                            <div id="contentUsuario" class="form-group">
+                                                <label id="lblErrorUsuario" style="display:none;  font-size:small" class="control-label" for="Nombres"><i class="fa fa-times-circle-o"></i> Formato Incorrecto!</label>
+                                                <input type="text" asp-for="OrigenForm" class="form-control" readonly="readonly" value="@ViewBag.Origen" style="display:none">
+                                                <input type="text" asp-for="UserName" class="form-control" placeholder="Escriba el nombre del Usuario">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Rol:</label>
+                                            <div id="contentRol">
+                                                <label id="lblErrorRol" style="display:none;  font-size:small" class="control-label" for="Nombres"><i class="fa fa-times-circle-o"></i> Formato Incorrecto!</label>
+                                                <select asp-for="Rol" id="SelectRoles" class="form-control" data-live-search="true" data-actions-box="true" title="..:: Seleccione Roles ::.." asp-items="@ViewBag.Roles"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Género:</label>
+                                            <div id="" class="form-group">
+                                                <select class="form-control " asp-for="Sexo" id="SelectSexo" title="..:: Seleccione Género ::..">
+                                                    <option value="Masculino" data-icon="fa fa-mars">Masculino</option>
+                                                    <option value="Femenino" data-icon="fa fa-venus">Femenino</option>
+                                                </select>
+                                                <span asp-validation-for="Sexo" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>Telefono:</label>
+                                            <div id="contentNombre" class="form-group">
+                                                <input type="tel" asp-for="PhoneNumber" data-inputmask="'mask': '(505) 9999-9999'" data-mask="" class="form-control" placeholder="Escriba el nombre del Usuario">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <label>Correo:</label>
+                                            <div id="contentNombre" class="form-group">
+                                                <input type="email" asp-for="Email" class="form-control" placeholder="Escriba el correo del usuario">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <button class="btn btn-block btn-primary btn-sm redondeo shadow" onclick="return validacionFormulario()">
+                                <i class="fa fa-save"></i> @TituloBtn
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+        $('#SelectRoles').selectpicker();
+        $('#SelectSexo').selectpicker();
+    });
+
+    function onBegin() {
+        IniciarLoad('#content-usuarios');
+    };
+    function onComplete() {
+        // Escondemos el Ajax Loader
+        CerrarLoad('#content-usuarios');
+    };
+
+    function onSuccessEdit(response) {
+        var origen = $('#OrigenForm').val();
+        SuccessGuardarJq(response, HideModalUsuario);
+        if (origen == 1) {
+            ShowDatosPersonales();
+        } else {
+            ShowUsuarios();
+        }
+    }
+    function onFailEdit(response) {
+        FailMensaje(response.responseJSON);
+    }
+    function HideModalUsuario() {
+        $('#modal-usuarioFormulario').modal("hide");
+    }
+
+    function validacionFormulario() {
+        //DECLARAMOS LAS VARIABLES
+        debugger;
+        var nombre, apellido, usuario, rol, contra, contra2, direccion, telefono, correo, tituloNombre, tituloApellido,
+            tituloUsuario, tituloRol, tituloContra, tituloContra2, tituloContra2, tituloTelefono, tituloCorreo;
+
+        nombre = $('#Nombres').val();
+        apellido = $('#Apellidos').val();
+        usuario = $('#UserName').val();
+        rol = $("#Rol").val()
+        telefono = $('#PhoneNumber').val();
+        correo = $('#Email').val();
+
+
+        //VALIDACIONES
+        if (!(/[A-Za-z]{1,200}/.test(nombre))) {
+            $("#lblErrorNombre").show();
+            $("#contentNombre").addClass("has-error animated shake");
+            $('#Nombres').focus();
+            tituloNombre = "Debe ingresar un Nombre";
+            $('#Nombres').tooltip({ title: tituloNombre, placement: "bottom" });
+            $('#Nombres').tooltip('show');
+            return false;
+        }
+        else if (/[A-Za-z]{1,200}/.test(nombre)) {
+            $("#lblErrorNombre").hide();
+            $("#contentNombre").removeClass("has-error animated shake");
+            $('#Nombres').tooltip('destroy');
+        }
+
+        return true;
+
+    }
+</script>

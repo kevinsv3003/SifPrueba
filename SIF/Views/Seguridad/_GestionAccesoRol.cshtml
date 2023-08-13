@@ -1,0 +1,127 @@
+﻿@model List<Aplicacion.EntidadesDto.MenuDto>
+
+
+
+<div class="modal fade" id="modal-menuAcceso" data-backdrop="static" style="display:none">
+    <div class="modal-dialog animated fadeIn">
+
+        <div class="widget-box ui-sortable-handle">
+
+            <div class="widget-header widget-header-small text-center">
+
+                <h5 class="widget-title smaller bolder text-dark">
+                    <i class="ace-icon fa fa-edit"></i>
+                    Gestion de Acceso
+                </h5>
+
+                <div class="widget-toolbar">
+                    <a href="#" data-action="close" data-dismiss="modal" aria-label="Close" title="Cerrar Modal">
+                        <i class="ace-icon fa fa-times bigger-125"></i>
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+
+                    <div id="content-usuarios" class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="tablaMenu" class="table table-hover" style="border: 1px solid #dddddd;">
+
+                                    <thead>
+                                        <tr class="bg-primary">
+                                            <th class="text-center">
+                                                Menú
+                                            </th>
+                                            <th class="text-center">
+                                                Tipo
+                                            </th>
+                                            <th class="text-center">
+                                                Acceso
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.OrderBy(m => m.Posicion))
+                                        {
+                                            var tipoMenu = item.esPrincipal ? "Es Principal" : "Es SubMenu"; 
+                                            var check = item.Activo ? "checked" : "False";
+
+                                            <tr>
+                                                <td class="text-justify">
+                                                    @item.Nombre
+                                                </td>
+                                                <td class="text-justify">                                                  
+                                                    @tipoMenu
+                                                </td>
+                                                <td>
+
+                                                    <div class="text-center">
+                                                        <label>
+                                                            <input id="IdRol" type="hidden" value="@ViewBag.IdRol" class="form-control" readonly="readonly">                                                            
+                                                            <input id="ck-@item.MenuId" value="@item.MenuId" class="ace ace-switch ace-switch-6" @check onchange="changeAcceso(this)" type="checkbox">
+                                                            <span class="lbl"></span>
+                                                        </label>
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <button class="btn btn-block btn-primary btn-sm redondeo shadow" data-action="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-save"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(function () {
+        EstiloTablaMenu('#tablaMenu');
+    });
+    function mostrarRoles() {
+        setTimeout(function () { ShowRoles(); }, 300);
+    }
+
+    function changeAcceso(e) {
+        let url = '@Url.Action("_changeAcceso", "Seguridad")';
+        let idRol = $('#IdRol').val();
+        let data = { MenuId: e.value, Ischecked: e.checked, IdRol: idRol };
+        console.log(data);
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            data: data,
+            async: true,
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (response) { console.log(response); }
+        });
+    }
+
+
+</script>

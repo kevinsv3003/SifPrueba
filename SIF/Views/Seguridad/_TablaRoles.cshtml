@@ -1,0 +1,121 @@
+﻿@model List<Aplicacion.EntidadesDto.RolDto>
+
+<button class="btn btn-primary btn-sm" onclick="ModalFormularioRol(2,'')">
+    <i class="ace-icon fa fa-plus-circle bigger-130"></i>
+    Agregar Rol 
+</button>
+
+<div class="widget-box widget-color-blue ui-sortable-handle mgt-12">
+    <div class="widget-header widget-header-small">
+        <h5 class="widget-title smaller lighter">
+            <i class="ace-icon fa fa-table"></i>
+            Listado de Roles
+        </h5>
+
+        <div class="widget-toolbar">
+            <a href="#" data-action="fullscreen" class="orange2" title="Expandir Vista">
+                <i class="ace-icon fa fa-expand"></i>
+            </a>
+
+            <a href="#" data-action="reload" onclick="mostrarRoles()" title="Recargar Datos">
+                <i class="ace-icon fa fa-refresh"></i>
+            </a>
+
+            <a href="#" data-action="collapse" title="Ocultar Panel">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+
+        </div>
+    </div>
+
+    <div id="contentRol" class="widget-body animated fadeIn">
+        <div class="widget-main" style="min-height:410px!important">
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="tablaRol" class="table table-hover dataTable" style="border: 1px solid #dddddd;" role="grid">
+
+                        <thead>
+                            <tr class="bg-primary">
+                                <th class="text-center">
+                                    Rol
+                                </th>
+                                <th class="text-center">
+                                    Descripción
+                                </th>
+                                <th class="text-center">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-justify">
+                                        @item.Nombre
+                                    </td>
+                                    <td class="text-justify">
+                                        @item.Descripcion
+                                    </td>
+                                    <td style="width: 15em;" class="text-right">
+
+                                        <a class="btn btn-flat btn-primary btn-xs shadow grow" onclick="ModalFormularioRol(3,'@item.IdRol')" data-toggle="tooltip" data-html="true" data-placement="left" title="Ver Detalles">
+                                            <i class="ace-icon fa fa-edit  bigger-110 icon-only"></i>
+                                        </a>
+                                        <a class="btn btn-flat btn-primary btn-xs shadow grow" onclick="GestionAcceso('@item.IdRol')" data-toggle="tooltip" data-html="true" data-placement="left" title="Ver Menús">
+                                            <i class="ace-icon fa fa-folder-open"></i>
+                                        </a>
+                                        <a class="btn btn-flat btn-danger btn-xs shadow grow" onclick="_EliminarRol('@item.IdRol')" data-toggle="tooltip" data-html="true" data-placement="left" title="Eliminar">
+                                            <i class="ace-icon fa fa-remove"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    $(function () {
+        EstiloTabla('#tablaRol');
+    });
+    function mostrarRoles() {
+        setTimeout(function () { ShowRoles(); }, 300);
+    }
+    function _EliminarRol(id) {
+        ConfirmarEliminado(EliminarRol, id);
+    }
+    function EliminarRol(Id) {
+        IniciarLoad('#contentRol');
+        var url = '@Url.Action("EliminarRol", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(Id),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                ShowRoles();
+                SuccessGuardarJq(response, vacio);
+                CerrarLoad('#contentRol');
+            },
+            error: function (response) {
+                console.log(response);
+                CerrarLoad('#contentRol');
+                FailGuardarJq(response);
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Admon. Usuarios";
+    ViewBag.SubTitle = "Control de Usuarios";
+    ViewBag.url = @Url.Action("AdministrarCuentas", "Seguridad"); // Accion de la vista
+    ViewBag.Regresar = @Url.Action("Index", "Home"); // Accion Principal
+    Layout = "~/Views/Shared/_LayoutSIF.cshtml";
+}
+
+
+
+<div id="modal_FormularioUsuario"></div>
+<div id="modal_FormularioRol"></div>
+<div id="modal_GestionAcceso"></div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div id="TablaUsuarios" class="mgt-12"></div>
+    </div>
+    <div class="col-md-4">
+        <div id="TablaRoles" class="mgt-12"></div>
+    </div>
+</div>
+
+
+<script src="~/assets/jquery/dist/jquery.min.js"></script>
+<script>
+
+    function ModalFormularioUsuario(origen, id) {
+        var data = { Origen: origen, IdUser: id }
+        var url = '@Url.Action("_FormularioUsuario", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            data: data,
+            async: true,
+            success: function (response) {
+                $('#modal_FormularioUsuario').html(response);
+                $('#modal-usuarioFormulario').modal("show");
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+     function ModalFormularioRol(origen, id) {
+        var data = { Origen: origen, IdRol: id }
+        var url = '@Url.Action("_FormularioRol", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            data: data,
+            async: true,
+            success: function (response) {
+                $('#modal_FormularioRol').html(response);
+                $('#modal-rolFormulario').modal("show");
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+
+    function GestionAcceso(IdRol) {
+        var data = { IdRol: IdRol }
+        var url = '@Url.Action("_GestionAccesoRol", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            data: data,
+            async: true,
+            success: function (response) {
+                $('#modal_GestionAcceso').html(response);
+                $('#modal-menuAcceso').modal("show");
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+
+    function ShowUsuarios() {
+        var url = '@Url.Action("_TablaUsuarios", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $('#TablaUsuarios').html(response);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+    function ShowRoles() {
+        var url = '@Url.Action("_TablaRoles", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (response) {
+                $('#TablaRoles').html(response);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+    $(function () {
+        ShowUsuarios();
+        ShowRoles();
+    });
+
+</script>

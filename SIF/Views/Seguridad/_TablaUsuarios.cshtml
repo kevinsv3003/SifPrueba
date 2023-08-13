@@ -1,0 +1,165 @@
+﻿@model List<Aplicacion.EntidadesDto.UsuarioDto>
+
+
+<button class="btn btn-primary btn-sm" onclick="ModalFormularioUsuario(2,'')">
+    <i class="ace-icon fa fa-plus-circle bigger-130"></i>
+    Agregar Usuario
+</button>
+
+
+<div class="widget-box widget-color-blue ui-sortable-handle mgt-12">
+    <div class="widget-header widget-header-small">
+        <h5 class="widget-title smaller lighter">
+            <i class="ace-icon fa fa-table"></i>
+            Listado de Usuarios
+        </h5>
+
+        <div class="widget-toolbar">
+            <a href="#" data-action="fullscreen" class="orange2" title="Expandir Vista">
+                <i class="ace-icon fa fa-expand"></i>
+            </a>
+
+            <a href="#" data-action="reload" onclick="mostrarUsuarios()" title="Recargar Datos">
+                <i class="ace-icon fa fa-refresh"></i>
+            </a>
+
+            <a href="#" data-action="collapse" title="Ocultar Panel">
+                <i class="ace-icon fa fa-chevron-up"></i>
+            </a>
+
+        </div>
+    </div>
+
+    <div id="contentUser" class="widget-body animated fadeIn">
+        <div class="widget-main" style="min-height:410px!important">
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="tablaUsuario" class="table table-hover dataTable" style="border: 1px solid #dddddd;" role="grid">
+
+                        <thead>
+                            <tr class="bg-primary">
+                                <th class="text-center">
+                                    Nombres
+                                </th>
+                                <th class="text-center">
+                                    Apellidos
+                                </th>
+                                <th class="text-center">
+                                    Usuario
+                                </th>
+                                <th class="text-center">
+                                    Correo
+                                </th>
+                                <th class="text-center">
+                                    Rol
+                                </th>
+                                <th class="text-center">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-justify">
+                                        @item.Nombres
+                                    </td>
+                                    <td class="text-justify">
+                                        @item.Apellidos
+                                    </td>
+                                    <td class="text-justify">
+                                        @item.UserName
+                                    </td>
+                                    <td class="text-justify">
+                                        @item.Email
+                                    </td>
+                                    <td class="text-justify">
+                                        @item.Rol
+                                    </td>
+                                    <td style="width: 15em;" class="text-right">
+
+                                        <a class="btn btn-flat btn-primary btn-xs shadow grow" onclick="ModalFormularioUsuario(3,'@item.Id')" data-toggle="tooltip" data-html="true" data-placement="left" title="Ver Detalles">
+                                            <i class="ace-icon fa fa-edit  bigger-110 icon-only"></i>
+                                        </a>
+                                        <a class="btn btn-flat btn-primary btn-xs shadow grow" onclick="_RestaurarContra('@item.Email','@item.UserName')" data-toggle="tooltip" data-html="true" data-placement="left" title="Restaurar Contraseña">
+                                            <i class="ace-icon fa fa-refresh"></i>
+                                        </a>
+                                        <a class="btn btn-flat btn-danger btn-xs shadow grow" onclick="_EliminarUsuario('@item.Id')" data-toggle="tooltip" data-html="true" data-placement="left" title="Eliminar">
+                                            <i class="ace-icon fa fa-remove"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        EstiloTabla('#tablaUsuario');
+    });
+    function mostrarUsuarios() {
+        setTimeout(function () { ShowUsuarios(); }, 300);
+    }
+    function _EliminarUsuario(id) {
+        ConfirmarEliminado(EliminarUsuario, id);
+    }
+    function EliminarUsuario(Id) {
+        IniciarLoad('#contentUser');
+        var url = '@Url.Action("EliminarUsuario", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(Id),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                mostrarUsuarios();
+                SuccessGuardarJq(response, vacio);
+                CerrarLoad('#contentUser');
+            },
+            error: function (response) {
+                console.log(response);
+                CerrarLoad('#contentUser');
+                FailGuardarJq(response);
+            }
+        });
+    }
+
+
+    function _RestaurarContra(email, username) {
+        ConfirmarRestauracion(RecordarContra, email, username);
+    }
+    function RecordarContra(email, username) {
+        IniciarLoad('#contentUser');
+        var model = { Email: email, userName: username }
+        var url = '@Url.Action("RestaurarContra", "Seguridad")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                SuccessGuardarJq(response, vacio);
+                //SuccessMensaje("Se ha restaurado la contraseña con éxito, se recomiendo cambiarla al iniciar sesión.");
+                CerrarLoad('#contentUser');
+            },
+            error: function (response) {
+                console.log(response);
+                CerrarLoad('#contentUser');
+                FailGuardarJq(response);
+            }
+        });
+    }
+
+</script>

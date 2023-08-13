@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aplicacion.Servicios\Aplicacion.Servicios.csproj" />
+    <ProjectReference Include="..\Dominio.Contratos\Dominio.Contratos.csproj" />
+    <ProjectReference Include="..\Domino.ReglaNegocio\Domino.ReglaNegocio.csproj" />
+    <ProjectReference Include="..\Infraestructura.Repositorios\Infraestructura.Repositorios.csproj" />
+    <ProjectReference Include="..\Infraestructura.Transversal\Infraestructura.Transversal.csproj" />
+    <ProjectReference Include="..\Infraestructura.UoW\Infraestructura.UoW.csproj" />
+  </ItemGroup>
+
+</Project>

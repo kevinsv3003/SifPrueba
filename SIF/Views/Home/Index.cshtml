@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Inicio";
+    ViewBag.SubTitle = "Sistema de Inteligencia Fiscal";
+    ViewBag.url = @Url.Action("Index", "Home"); // Accion de la vista
+    ViewBag.Regresar = @Url.Action("Index", "Home"); // Accion Principal
+    Layout = "~/Views/Shared/_LayoutSIF.cshtml";
+}
+
+<link href="~/assets/css/MisEstilos.css" rel="stylesheet" />
+<div class="text-center">
+    <h1 class="display-4">¡Bienvenido! - <b>S</b>istema de <b>I</b>nteligencia <b>F</b>iscal!</h1>
+    <p>Elaborado por <a href="https://www.dgi.gob.ni" target="_blank">Dirección General de Ingresos</a>.</p>
+</div>
+<br />
+<br />
+
+<div class="text-center" style="overflow: hidden; height: 500px;">
+    <img class="cboxPhoto" src="~/assets/css/images/Technology-PNG-High-Quality-Image.png" style=" width: 500px; height: 500px; float: none;">
+</div>

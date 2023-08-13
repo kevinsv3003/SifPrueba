@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Dominio.Entidades;
+@using Aplicacion.Contrato;
+@using Aplicacion.EntidadesDto;
+
+@inject IMenuAplicacion _menuAplicacion;
+@inject UserManager<UsuarioApp> UserManager;
+@inject RoleManager<RolApp> _roleManager;
+
+@{
+    var usuario = User.Identity.IsAuthenticated ? await UserManager.GetUserAsync(User) : null;
+
+
+
+    var rolesUsuario = (usuario != null) ? await UserManager.GetRolesAsync(usuario) : new List<string>();
+    var nombreRol = (usuario != null) ? new List<string>(rolesUsuario).ToArray()[0] : "";
+    var rolUsuario = (usuario != null) ? await _roleManager.FindByNameAsync(nombreRol) : new RolApp();
+    var menuPadre = (usuario != null) ? await _menuAplicacion.ObtenerMenusPorRol(rolUsuario.Id) : new List<MenuDto>();
+
+
+}
+
+
+<div id="sidebar" class="sidebar responsive ace-save-state">
+    <script type="text/javascript">
+        try { ace.settings.loadState('sidebar') } catch (e) { }
+    </script>
+
+    <ul class="nav nav-list">
+        <li class="">
+            <a href="@Url.Action("Index", "Home")" class="text-center" style="cursor:default">
+                <span class="menu-text"> Menú SIF </span>
+            </a>
+        </li>
+
+        @foreach (var menu in menuPadre.OrderBy(m => m.Posicion))
+        {
+            <li>
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa @menu.IconoCss"></i>
+                    <span class="menu-text">
+                        @menu.Nombre
+                    </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    @foreach (var subMenu in menu.SubMenus.OrderBy(x => x.Posicion))
+                    {
+                        @if (subMenu.esPrincipal)
+                        {
+                            <li>
+                                <a href="#" class="dropdown-toggle">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    @subMenu.Nombre
+                                    <b class="arrow fa fa-angle-down"></b>
+                                </a><b class="arrow"></b>
+                                <ul class="submenu">
+                                    @foreach (var subMenu2 in subMenu.SubMenus.OrderBy(x => x.Posicion))
+                                    {
+                                        <li class="">
+                                            <a href="@Url.Action(subMenu2.Accion, subMenu2.Controlador)">
+                                                <i class="menu-icon fa fa-caret-right"></i>
+                                                @subMenu2.Nombre
+                                            </a>
+                                            <b class="arrow"></b>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+
+                        }
+                        else
+                        {
+                            <li class="">
+                                <a href="@Url.Action(subMenu.Accion, subMenu.Controlador)">
+                                    <i class="menu-icon fa fa-caret-right"></i>
+                                    @subMenu.Nombre
+                                </a>
+                                <b class="arrow"></b>
+                            </li>
+
+                        }
+
+                    }
+                </ul>
+
+            </li>
+        }
+
+    </ul><!-- /.nav-list -->
+
+    <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+        <i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+    </div>
+</div>
